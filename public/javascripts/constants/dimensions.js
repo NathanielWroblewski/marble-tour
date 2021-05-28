@@ -22,3 +22,5 @@ export const MAX_DISTANCE = 600
 export const BUFFER = 1
 
 export const WAVE_RESOLUTION = 0.05
+
+export const FPS = 60

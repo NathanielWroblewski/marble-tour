@@ -12,7 +12,7 @@ import { stableSort, remap, grid, cube, clamp } from './utilities/index.js'
 import { COLORS, EDGE_COLOR, TOP_COLOR, SPHERE_COLOR, SPHERE_OUTLINE } from './constants/colors.js'
 import {
   ZOOM, SPHERE_TOUR_RESOLUTION, SPHERE_TOUR_RADIUS, Δt, Z_TOP, MIN_DISTANCE,
-  BUFFER, WAVE_RESOLUTION, MAX_DISTANCE
+  BUFFER, WAVE_RESOLUTION, MAX_DISTANCE, FPS
 } from './constants/dimensions.js'
 
 // Copyright (c) 2020 Nathaniel Wroblewski
@@ -84,7 +84,7 @@ const rcircle = Vector.from(
 const sphereBoundsX = [from.x + BUFFER, to.x - BUFFER]
 const sphereBoundsY = [from.y + BUFFER, to.y - BUFFER]
 
-const step = () => {
+const render = () => {
   context.clearRect(0, 0, canvas.width, canvas.height)
 
   // update sphere
@@ -149,7 +149,18 @@ const step = () => {
   renderCircle(context, camera.project(sphere.transform(perspective)), rcircle, SPHERE_OUTLINE, SPHERE_COLOR)
 
   t += Δt
+}
+
+let prevTick = 0
+
+const step = () => {
   window.requestAnimationFrame(step)
+
+  const now = Math.round(FPS * Date.now() / 1000)
+  if (now === prevTick) return
+  prevTick = now
+
+  render()
 }
 
 step()
